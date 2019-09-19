@@ -15,6 +15,11 @@ export default new Vuex.Store({
     },
     setLoading (state, payload) {
       state.loading = payload
+    },
+    deleteRow (state,payload){
+      
+      console.log('mutation: ',payload);
+      
     }
   },
   actions: {
@@ -31,6 +36,9 @@ export default new Vuex.Store({
             console.log(error)
           }
         )
+    },
+    deleteRow ({commit},payload){
+      commit('deleteRow',payload);
     }
   },
   getters: {
