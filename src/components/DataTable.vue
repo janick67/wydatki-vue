@@ -2,7 +2,7 @@
   <v-card class="ma-2 ma-md-8 mainWydatki" dark>
 
 <div class="d-flex flex-row-reverse crud">
-  <Dialog :headers="headers" />
+  <Dialog :headers="headers" ref="Dialog" @saveEdit="onSaveEdit"/>
   </div>
     <v-card-title>
       {{title}}
@@ -17,7 +17,7 @@
     </v-card-title>
 
     <v-data-table
-    
+
     calculate-widths
       :headers="headers"
       :items="desserts"
@@ -28,14 +28,16 @@
     >
       <template v-slot:item.action="{ item }">
         <v-icon
-          small
+          medium
+          light
           class="mr-2"
           @click="editItem(item)"
         >
           mdi-pencil
         </v-icon>
         <v-icon
-          small
+          medium
+          light
           @click="deleteItem(item)"
         >
           mdi-delete
@@ -54,7 +56,8 @@ export default {
     return {
       search: '',
       title: 'Wydatki',
-      headersParam: { id: { order: 1, show:-1 }, bank: { order: 2 }, kwota: { order: 3 }, data: { order: 4 }, typ: { order: 5 }, typ2: { order: 6, show:-1  }, gdzie: { order: 7 }, kogo: { order: 8 }, osoba: { order: 9, show:-1 }, powiazane: { order: 10, show:-1 }, opis: { order: 11 }, action: {order:12} },    
+      rerender: 0,
+      headersParam: { id: { order: 1, show: 1 }, bank: { order: 2 }, kwota: { order: 3 }, data: { order: 4 }, typ: { order: 5 }, typ2: { order: 6, show: -1 }, gdzie: { order: 7 }, kogo: { order: 8 }, osoba: { order: 9, show: -1 }, powiazane: { order: 10, show: -1 }, opis: { order: 11 }, action: { order: 12 } }
     }
   },
   components: {
@@ -67,21 +70,18 @@ export default {
     headers () {
       let objHeads = []
       for (const el in this.rows[0]) {
-        let order = '';
-        if (typeof this.headersParam !== 'undefined' && typeof this.headersParam[el] !== 'undefined') {
-          if (this.headersParam[el].show == -1) continue 
-          if (typeof this.headersParam[el].order !== 'undefined')
-            order = this.headersParam[el].order 
-          else
+        let order = ''
+        if (typeof this.headersParam !== 'undefined' && typeof this.headersParam[el] !== 'undefined') { // przepisać na object assigne
+          if (this.headersParam[el].show == -1) continue
+          if (typeof this.headersParam[el].order !== 'undefined') { order = this.headersParam[el].order } else { order = 1000 }
+        } else {
           order = 1000
-        } else { 
-          order = 1000 } // będzie gdzieś na końcu
-
+        } // będzie gdzieś na końcu
         let obj = { text: el.toUpperCase(), value: el, edit: '', order, align: 'center' }
         objHeads.push(obj)
       }
-      if (this.headersParam['action'].show != -1) objHeads.push({ text: 'Actions', value: 'action', sortable: false, order: this.headersParam['action'].order });
-      objHeads.sort((a,b) => a.order - b.order)
+      if (this.headersParam['action'].show != -1) objHeads.push({ text: 'Actions', value: 'action', edit: undefined, sortable: false, order: this.headersParam['action'].order })
+       objHeads.sort((a, b) => a.order - b.order)
       return objHeads
     },
     desserts () {
@@ -91,19 +91,24 @@ export default {
       return this.$store.getters.loading
     }
   },
-  methods:{
-    editItem(item){
-      console.log('edit ',item)
+  methods: {
+    editItem (item) {
+      let index = this.rows.indexOf(item)
+      this.$refs.Dialog.openEdit(item, index)
     },
-    deleteItem(item){
-      this.$store.dispatch('deleteRow',item)
-      console.log('delete ',item)
+    onSaveEdit () {
+      this.rerenderForce()
+    },
+    rerenderForce () {
+
+    },
+    deleteItem (item) {
+      let index = this.rows.indexOf(item)
+      this.$store.dispatch('deleteItem', { item, index })
     }
   }
 }
 </script>
-
-
 
 <style lang="scss" >
 .v-card.mainWydatki{
@@ -124,9 +129,6 @@ export default {
     tbody{
       tr{
         background-color: var(--v-accent-lighten4);
-        color: black;
-      }
-      i{
         color: black;
       }
 

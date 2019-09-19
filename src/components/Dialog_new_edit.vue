@@ -11,7 +11,7 @@
         <v-card-text primary>
             <v-container>
             <v-row :key="rerender">
-                <v-col cols="12" sm="6" md="4" v-for="(el,index) in headers" :key="index">
+                <v-col cols="12" sm="6" md="4" v-for="(el,index) in headersRender" :key="index">
                     <v-text-field v-model="el.edit" :label="el.text"></v-text-field>
                 </v-col>
             </v-row>
@@ -37,26 +37,47 @@ export default {
   data () {
     return {
       dialog: false,
-      rerender: 0
+      rerender: 0,
+      editItem: -1
+    }
+  },
+  computed: {
+    headersRender () {
+      return this.headers.filter(el => typeof el.edit !== 'undefined')
     }
   },
   methods: {
-    clear (){
-        this.headers.forEach(el =>{
-            el.edit = '';
-        })
-        this.rerender += 1
+    openEdit (row, index) {
+      this.dialog = true
+      this.editItem = index
+      this.headers.forEach(el => {
+        el.edit = row[el.value]
+      })
+      this.rerender += 1
+    },
+    clear () {
+      this.headers.forEach(el => {
+        el.edit = ''
+      })
+      this.rerender += 1
     },
     close () {
       this.dialog = false
       this.clear()
     },
     save () {
-        let data = {};
-        this.headers.forEach(el => {
-            data[el.value] = el.edit
-        })
-      console.log('data: ', data)
+      let data = {}
+      this.headers.forEach(el => {
+        data[el.value] = el.edit
+      })
+      if (this.editItem >= 0) {
+        this.$store.dispatch('editItem', { item: data, index: this.editItem })
+        // console.log('edytuje element',data, this.editItem)
+        this.$emit('saveEdit')
+        this.editItem = -1
+      } else {
+        this.$store.dispatch('addItem', data)
+      }
       this.close()
     }
   }

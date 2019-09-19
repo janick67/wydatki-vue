@@ -16,10 +16,29 @@ export default new Vuex.Store({
     setLoading (state, payload) {
       state.loading = payload
     },
-    deleteRow (state,payload){
-      
-      console.log('mutation: ',payload);
-      
+    deleteItem (state, { item, index }) {
+      let same = true
+      for (const el in state.rows[index]) {
+        if (state.rows[index][el] != item[el]) same = false
+      }
+      if (same && index < state.rows.length && index >= 0) {
+        state.rows.splice(index, 1)
+      } else {
+        console.warn('Nie udało się usunąć pozycji pierwszym sposobem')
+        // state.rows = state.rows.filter(row => {
+        // for(const el in row){
+        //   if (row[el] != item[el]) return true
+        // }
+        // return false
+        // })
+      }
+    },
+    editItem (state, { item, index }) {
+      console.log('mutation:', index, item, state.rows[index])
+      state.rows[index] = item
+    },
+    addItem (state, payload) {
+      state.rows.push(payload)
     }
   },
   actions: {
@@ -37,8 +56,15 @@ export default new Vuex.Store({
           }
         )
     },
-    deleteRow ({commit},payload){
-      commit('deleteRow',payload);
+    deleteItem ({ commit }, payload) {
+      commit('deleteItem', payload)
+    },
+    addItem ({ commit }, payload) {
+      commit('addItem', payload)
+    },
+    editItem ({ commit }, payload) {
+      console.log('action: ', payload)
+      commit('editItem', payload)
     }
   },
   getters: {
