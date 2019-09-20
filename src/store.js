@@ -34,8 +34,8 @@ export default new Vuex.Store({
       }
     },
     editItem (state, { item, index }) {
-      console.log('mutation:', index, item, state.rows[index])
-      state.rows[index] = item
+      let old = state.rows.splice(index, 1)[0]
+      state.rows.push(Object.assign({}, old, item))
     },
     addItem (state, payload) {
       state.rows.push(payload)
@@ -44,7 +44,7 @@ export default new Vuex.Store({
   actions: {
     loadRows ({ commit }) {
       commit('setLoading', true)
-      firebase.database().ref('/data/janick67/rows').once('value')
+      firebase.database().ref('/data/test/rows').once('value')
         .then((data) => {
           commit('setLoadedRows', data.val())
           commit('setLoading', false)
@@ -63,13 +63,12 @@ export default new Vuex.Store({
       commit('addItem', payload)
     },
     editItem ({ commit }, payload) {
-      console.log('action: ', payload)
       commit('editItem', payload)
     }
   },
   getters: {
     rows (state) {
-      return state.rows
+      return state.rows.sort((a, b) => a.id - b.id)
     },
     loading (state) {
       return state.loading

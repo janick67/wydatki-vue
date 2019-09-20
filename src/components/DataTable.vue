@@ -2,7 +2,7 @@
   <v-card class="ma-2 ma-md-8 mainWydatki" dark>
 
 <div class="d-flex flex-row-reverse crud">
-  <Dialog :headers="headers" ref="Dialog" @saveEdit="onSaveEdit"/>
+  <Dialog :headers="headers" ref="Dialog"/>
   </div>
     <v-card-title>
       {{title}}
@@ -50,6 +50,7 @@
 
 <script>
 import Dialog from './Dialog_new_edit.vue'
+import { type } from 'os'
 
 export default {
   data () {
@@ -57,7 +58,7 @@ export default {
       search: '',
       title: 'Wydatki',
       rerender: 0,
-      headersParam: { id: { order: 1, show: 1 }, bank: { order: 2 }, kwota: { order: 3 }, data: { order: 4 }, typ: { order: 5 }, typ2: { order: 6, show: -1 }, gdzie: { order: 7 }, kogo: { order: 8 }, osoba: { order: 9, show: -1 }, powiazane: { order: 10, show: -1 }, opis: { order: 11 }, action: { order: 12 } }
+      headersParam: { id: { order: 1, show: -1 }, bank: { order: 2 }, kwota: { order: 3 }, data: { order: 4 }, typ: { order: 5 }, typ2: { order: 6, show: -1 }, gdzie: { order: 7 }, kogo: { order: 8 }, osoba: { order: 9, show: -1 }, powiazane: { order: 10, show: -1 }, opis: { order: 11 }, action: { order: 12, edit: '##notEditable##', sortable: false } }
     }
   },
   components: {
@@ -69,19 +70,15 @@ export default {
     },
     headers () {
       let objHeads = []
-      for (const el in this.rows[0]) {
-        let order = ''
-        if (typeof this.headersParam !== 'undefined' && typeof this.headersParam[el] !== 'undefined') { // przepisać na object assigne
-          if (this.headersParam[el].show == -1) continue
-          if (typeof this.headersParam[el].order !== 'undefined') { order = this.headersParam[el].order } else { order = 1000 }
-        } else {
-          order = 1000
-        } // będzie gdzieś na końcu
-        let obj = { text: el.toUpperCase(), value: el, edit: '', order, align: 'center' }
-        objHeads.push(obj)
+      let heads = {}
+      if (Object.getOwnPropertyNames(this.headersParam).length > 0) { heads = this.headersParam } else { heads = this.rows[0] }
+
+      for (const el in heads) {
+        let obj = { text: el.toUpperCase(), value: el, edit: '', order: 200, align: 'center', show: 1, sortable: true }
+        let newObj = Object.assign({}, obj, this.headersParam[el])
+        objHeads.push(newObj)
       }
-      if (this.headersParam['action'].show != -1) objHeads.push({ text: 'Actions', value: 'action', edit: undefined, sortable: false, order: this.headersParam['action'].order })
-       objHeads.sort((a, b) => a.order - b.order)
+      objHeads = objHeads.filter(el => el.show >= 0)
       return objHeads
     },
     desserts () {
@@ -95,12 +92,6 @@ export default {
     editItem (item) {
       let index = this.rows.indexOf(item)
       this.$refs.Dialog.openEdit(item, index)
-    },
-    onSaveEdit () {
-      this.rerenderForce()
-    },
-    rerenderForce () {
-
     },
     deleteItem (item) {
       let index = this.rows.indexOf(item)

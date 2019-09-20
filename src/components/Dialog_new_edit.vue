@@ -43,7 +43,7 @@ export default {
   },
   computed: {
     headersRender () {
-      return this.headers.filter(el => typeof el.edit !== 'undefined')
+      return this.headers.filter(el => el.edit !== '##notEditable##')
     }
   },
   methods: {
@@ -72,8 +72,6 @@ export default {
       })
       if (this.editItem >= 0) {
         this.$store.dispatch('editItem', { item: data, index: this.editItem })
-        // console.log('edytuje element',data, this.editItem)
-        this.$emit('saveEdit')
         this.editItem = -1
       } else {
         this.$store.dispatch('addItem', data)
