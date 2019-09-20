@@ -2,7 +2,7 @@
   <v-card class="ma-2 ma-md-8 mainWydatki" dark>
 
 <div class="d-flex flex-row-reverse crud">
-  <Dialog :headers="headers" ref="Dialog"/>
+  <Dialog :headers="headers" ref="Dialog" @saveEdit="onSaveEdit"/>
   </div>
     <v-card-title>
       {{title}}
@@ -10,7 +10,7 @@
       <v-text-field
         v-model="search"
         append-icon="mdi-magnify"
-        label="Search"
+        label="Szukaj..."
         single-line
         hide-details
       ></v-text-field>
@@ -23,6 +23,8 @@
       :items="desserts"
       :items-per-page="5"
       :search="search"
+      no-data-text="Brak danych... Możesz dodać nowe wpisy"
+      no-results-text="Brak pasujących wyników"
       class="elevation-1"
       v-if="!myLoading"
     >
@@ -44,13 +46,12 @@
         </v-icon>
       </template>
     </v-data-table>
-    <v-data-table v-else item-key="name" class="elevation-1" dark loading loading-text="Loading... Please wait"></v-data-table>
+    <v-data-table v-else item-key="name" class="elevation-1" dark loading loading-text="Trwa ładowanie..."></v-data-table>
   </v-card>
 </template>
 
 <script>
 import Dialog from './Dialog_new_edit.vue'
-import { type } from 'os'
 
 export default {
   data () {
@@ -58,7 +59,7 @@ export default {
       search: '',
       title: 'Wydatki',
       rerender: 0,
-      headersParam: { id: { order: 1, show: -1 }, bank: { order: 2 }, kwota: { order: 3 }, data: { order: 4 }, typ: { order: 5 }, typ2: { order: 6, show: -1 }, gdzie: { order: 7 }, kogo: { order: 8 }, osoba: { order: 9, show: -1 }, powiazane: { order: 10, show: -1 }, opis: { order: 11 }, action: { order: 12, edit: '##notEditable##', sortable: false } }
+      headersParam: { id: { order: 1, show: -1, edit: '##notEditable##' }, bank: { order: 2 }, kwota: { order: 3 }, data: { order: 4 }, typ: { order: 5 }, typ2: { order: 6, show: -1 }, gdzie: { order: 7 }, kogo: { order: 8 }, osoba: { order: 9, show: -1 }, powiazane: { order: 10, show: -1 }, opis: { order: 11 }, action: { order: 12, edit: '##notEditable##', sortable: false } }
     }
   },
   components: {
@@ -95,7 +96,10 @@ export default {
     },
     deleteItem (item) {
       let index = this.rows.indexOf(item)
-      this.$store.dispatch('deleteItem', { item, index })
+      this.$store.dispatch('deleteItem', { id: this.rows[index].id })
+    },
+    onSaveEdit (item, index) {
+      this.$store.dispatch('editItem', { item, id: this.rows[index].id })
     }
   }
 }

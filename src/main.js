@@ -3,10 +3,14 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify'
-import * as firebase from 'firebase'
+import firebase from 'firebase'
 import config from './config'
 
 Vue.config.productionTip = false
+
+firebase.initializeApp(config.firebaseConfig)
+
+export const db = firebase.firestore()
 
 new Vue({
   router,
@@ -14,7 +18,6 @@ new Vue({
   vuetify,
   render: h => h(App),
   created () {
-    firebase.initializeApp(config.firebase_api)
     this.$store.dispatch('loadRows')
   }
 }).$mount('#app')

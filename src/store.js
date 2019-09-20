@@ -1,74 +1,56 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import * as firebase from 'firebase'
+import { db } from '@/main'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
     rows: [],
-    loading: false
+    loading: false,
+    dbcol: {},
+    conect: false
   },
   mutations: {
     setLoadedRows (state, payload) {
       state.rows = payload
     },
+    setDbConnect (state) {
+      state.connect = true
+      state.dbcol = db.collection('data').doc('test').collection('rows')
+    },
     setLoading (state, payload) {
       state.loading = payload
-    },
-    deleteItem (state, { item, index }) {
-      let same = true
-      for (const el in state.rows[index]) {
-        if (state.rows[index][el] != item[el]) same = false
-      }
-      if (same && index < state.rows.length && index >= 0) {
-        state.rows.splice(index, 1)
-      } else {
-        console.warn('Nie udało się usunąć pozycji pierwszym sposobem')
-        // state.rows = state.rows.filter(row => {
-        // for(const el in row){
-        //   if (row[el] != item[el]) return true
-        // }
-        // return false
-        // })
-      }
-    },
-    editItem (state, { item, index }) {
-      let old = state.rows.splice(index, 1)[0]
-      state.rows.push(Object.assign({}, old, item))
-    },
-    addItem (state, payload) {
-      state.rows.push(payload)
     }
   },
   actions: {
-    loadRows ({ commit }) {
+    loadRows ({ commit, state }) {
       commit('setLoading', true)
-      firebase.database().ref('/data/test/rows').once('value')
-        .then((data) => {
-          commit('setLoadedRows', data.val())
-          commit('setLoading', false)
+      if (!state.conect) commit('setDbConnect')
+      state.dbcol.onSnapshot(snap => {
+        let items = []
+        snap.forEach((doc) => {
+          let obj = doc.data()
+          obj.id = doc.id
+          items.push(obj)
         })
-        .catch(
-          (error) => {
-            commit('setLoading', false)
-            console.log(error)
-          }
-        )
+        commit('setLoadedRows', items)
+        commit('setLoading', false)
+      })
     },
-    deleteItem ({ commit }, payload) {
-      commit('deleteItem', payload)
+    deleteItem ({ state }, { id }) {
+      state.dbcol.doc(id).delete()
     },
-    addItem ({ commit }, payload) {
-      commit('addItem', payload)
+    addItem ({ state }, payload) {
+      state.dbcol.add(payload)
     },
-    editItem ({ commit }, payload) {
-      commit('editItem', payload)
+    editItem ({ state }, { item, id }) {
+      state.dbcol.doc(id).set(item)
     }
   },
   getters: {
     rows (state) {
-      return state.rows.sort((a, b) => a.id - b.id)
+      return state.rows.sort((a, b) => new Date(a.data) - new Date(b.data))
     },
     loading (state) {
       return state.loading

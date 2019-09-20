@@ -1,11 +1,11 @@
 <template>
     <v-dialog v-model="dialog" max-width="500px">
         <template v-slot:activator="{ on }">
-        <v-btn color="primary" dark class="ma-2" v-on="on">New Item</v-btn>
+        <v-btn color="primary" dark class="ma-2" v-on="on">Dodaj</v-btn>
         </template>
         <v-card>
         <v-card-title>
-            <span class="headline">New Element</span>
+            <span class="headline">Dodaj nowy element</span>
         </v-card-title>
 
         <v-card-text primary>
@@ -20,9 +20,9 @@
 
         <v-card-actions>
             <div class="flex-grow-1"></div>
-            <v-btn color="blue darken-1" text @click="clear">Clear</v-btn>
-            <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-            <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+            <v-btn color="blue darken-1" text @click="clear">Wyczyść</v-btn>
+            <v-btn color="blue darken-1" text @click="close">Anuluj</v-btn>
+            <v-btn color="blue darken-1" text @click="save">Zapisz</v-btn>
         </v-card-actions>
         </v-card>
     </v-dialog>
@@ -68,10 +68,12 @@ export default {
     save () {
       let data = {}
       this.headers.forEach(el => {
-        data[el.value] = el.edit
+        if (el.value.toLowerCase() !== 'action') { data[el.value] = el.edit }
       })
+
       if (this.editItem >= 0) {
-        this.$store.dispatch('editItem', { item: data, index: this.editItem })
+        // this.$store.dispatch('editItem', { item: data, index: this.editItem })
+        this.$emit('saveEdit', data, this.editItem)
         this.editItem = -1
       } else {
         this.$store.dispatch('addItem', data)
