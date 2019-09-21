@@ -1,7 +1,9 @@
 <template>
     <div>
     <v-toolbar class="primary" dark>
-      <v-toolbar-title>Title</v-toolbar-title>
+      <v-toolbar-title>
+        <v-btn class="primary" to="/">Wydatki</v-btn>
+      </v-toolbar-title>
 
       <div class="flex-grow-1"></div>
 

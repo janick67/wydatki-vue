@@ -19,12 +19,12 @@
     <v-data-table
 
     calculate-widths
+    locale="pl_PL"
       :headers="headers"
       :items="desserts"
       :items-per-page="5"
       :search="search"
-      no-data-text="Brak danych... Możesz dodać nowe wpisy"
-      no-results-text="Brak pasujących wyników"
+      
       class="elevation-1"
       v-if="!myLoading"
     >
