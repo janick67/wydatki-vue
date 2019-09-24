@@ -127,7 +127,7 @@ export default new Vuex.Store({
 
   getters: {
     rows (state) {
-      return state.rows.sort((a, b) => new Date(a.data) - new Date(b.data))
+      return state.rows.sort((a, b) => new Date(a.data) - new Date(b.data)).slice(1, 1)
     },
     user (state) {
       return state.user

@@ -1,6 +1,7 @@
 <template>
   <v-app :style="{background: $vuetify.theme.themes.light.background}">
     <Menu />
+
     <v-content>
       <router-view/>
     </v-content>
