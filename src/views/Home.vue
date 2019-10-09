@@ -27,8 +27,13 @@
                 v-model="selected"
                 multiple
               >
-                <template v-for="(record,index) in transactions" >
-                  <v-list-item :key="record.id" :class="{'red lighten-5':record.type == 1,'green lighten-5':record.type == 2}">
+                <template v-for="(record) in transactions" >
+                   <v-card :key="record.id">
+
+  <v-card-text class="pa-0 grey darken-5">
+              <div class="px-2 white--text">{{record.date | date}}</div>
+
+                  <v-list-item  :class="{'red lighten-5':record.type == 1,'green lighten-5':record.type == 2}">
                     <template>
                       <v-list-item-content>
                         <v-list-item-title v-text="record.category"></v-list-item-title>
@@ -40,11 +45,8 @@
                       </v-list-item-action>
                     </template>
                   </v-list-item>
-
-                  <v-divider
-                    v-if="index + 1 < transactions.length"
-                    :key="index"
-                  ></v-divider>
+                  </v-card-text>
+ </v-card>
                 </template>
               </v-list-item-group>
             </v-list>
@@ -55,6 +57,8 @@
             </div> -->
           </v-card-text>
         </v-card>
+
+
       </v-tab-item>
     </v-tabs-items>
   </v-card>
@@ -74,7 +78,7 @@ export default {
     return{
       tabs:['Wszystkie','Wydatki','Przychody'],
       tab:0,
-      selected:[1]
+      selected:[]
     }
   },
    computed: {
@@ -83,7 +87,7 @@ export default {
       console.log(this.$store.getters.transactions)
       return this.$store.getters.transactions.filter(function(el){
        if (tab == 0){
-          return true
+          return el.type == 1 || el.type == 2
         }else if(tab == 1){
           return el.type == 1
         }else{
