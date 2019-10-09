@@ -10,8 +10,6 @@ import config from './config'
 import DateFilter from './filters/date'
 import MoneyFilter from './filters/money'
 
-
-
 Vue.filter('date', DateFilter)
 Vue.filter('money', MoneyFilter)
 

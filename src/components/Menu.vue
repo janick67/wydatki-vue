@@ -10,13 +10,13 @@
 
       <div class="flex-grow-1"></div>
 
-       <v-btn 
+       <v-btn
           v-if="userIsAuthenticated"
           @click="onLogout">
           <v-icon left dark>mdi-exit-to-app</v-icon>
           Wyloguj
         </v-btn>
-        <v-btn 
+        <v-btn
         v-else
         to="/signin">
           <v-icon left dark>mdi-lock-open-variant</v-icon>
@@ -64,7 +64,6 @@
       </v-list>
     </v-navigation-drawer>
 
-
   </div>
     <!-- <div>
     <v-toolbar class="primary" dark>
@@ -75,7 +74,7 @@
       <div class="flex-grow-1"></div>
 
       <v-toolbar-items>
-        <v-btn 
+        <v-btn
           class="primary"
           v-for="item in menuItems"
           :key="item.title"
@@ -85,7 +84,7 @@
 
         </v-btn>
 
-        <v-btn 
+        <v-btn
           class="primary"
           v-if="userIsAuthenticated"
           @click="onLogout">
@@ -97,48 +96,46 @@
   </div> -->
 </template>
 
-
 <script>
-  export default {
-    data () {
-      return {
-        sideNav: false,
-        drawer: null,
-      }
-    },
-    computed: {
-      menuItems () {
-        let menuItems = [
-          {icon: 'mdi-fountain', text: 'Wypróbuj', link: '/demo'},
-          {icon: 'mdi-face', text: 'Zarejestruj', link: '/signup'},
-          {icon: 'mdi-lock-open-variant', text: 'Zaloguj', link: '/signin'}
+export default {
+  data () {
+    return {
+      sideNav: false,
+      drawer: null
+    }
+  },
+  computed: {
+    menuItems () {
+      let menuItems = [
+        { icon: 'mdi-fountain', text: 'Wypróbuj', link: '/demo' },
+        { icon: 'mdi-face', text: 'Zarejestruj', link: '/signup' },
+        { icon: 'mdi-lock-open-variant', text: 'Zaloguj', link: '/signin' }
+      ]
+      if (this.userIsAuthenticated) {
+        menuItems = [
+          { icon: 'mdi-calculator', text: 'Podsumowanie', link: '/summary' },
+          { icon: 'mdi-calendar', text: 'Kalendarz', link: '/calendary' },
+          { icon: 'mdi-bank', text: 'Konta', link: '/accounts' },
+          { icon: 'mdi-bank-transfer', text: 'Transakcje', link: '/deals' },
+          { icon: 'mdi-cash-refund', text: 'Dłużnicy', link: '/debtors' },
+          { icon: 'mdi-bank-transfer-out', text: 'Moje długi', link: '/debt' },
+          { icon: 'mdi-folder-open', text: 'Kategorie', link: '/categories' },
+          { icon: 'mdi-chart-bar', text: 'Wykresy', link: '/charts' },
+          { icon: 'mdi-account', text: 'Profil', link: '/profile' },
+          { icon: 'mdi-settings', text: 'Ustawienia', link: '/settings' },
+          { icon: 'mdi-exit-to-app', text: 'Wyloguj', link: '/logout' }
         ]
-        if (this.userIsAuthenticated) {
-          menuItems = [
-            {icon: 'mdi-calculator', text: 'Podsumowanie', link: '/summary'},
-            {icon: 'mdi-calendar', text: 'Kalendarz', link: '/calendary'}, 
-            {icon: 'mdi-bank', text: 'Konta', link: '/accounts'},
-            {icon: 'mdi-bank-transfer', text: 'Transakcje', link: '/deals'},   
-            {icon: 'mdi-cash-refund', text: 'Dłużnicy', link: '/debtors'},
-            {icon: 'mdi-bank-transfer-out', text: 'Moje długi', link: '/debt'},      
-            {icon: 'mdi-folder-open', text: 'Kategorie', link: '/categories'},
-            {icon: 'mdi-chart-bar', text: 'Wykresy', link: '/charts'},
-            {icon: 'mdi-account', text: 'Profil', link: '/profile'},
-            {icon: 'mdi-settings', text: 'Ustawienia', link: '/settings'},
-            {icon: 'mdi-exit-to-app', text: 'Wyloguj', link: '/logout'}
-          ]
-        }
-        return menuItems
-      },
-      userIsAuthenticated () {
-        return this.$store.getters.user !== null && this.$store.getters.user !== undefined
       }
+      return menuItems
     },
-    methods: {
-      onLogout () {
-        this.$store.dispatch('logout')
-      }
+    userIsAuthenticated () {
+      return this.$store.getters.user !== null && this.$store.getters.user !== undefined
+    }
+  },
+  methods: {
+    onLogout () {
+      this.$store.dispatch('logout')
     }
   }
+}
 </script>
-

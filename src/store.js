@@ -3,7 +3,6 @@ import Vuex from 'vuex'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
-import { db } from '@/main'
 
 Vue.use(Vuex)
 
@@ -38,10 +37,9 @@ export default new Vuex.Store({
   },
   actions: {
     loadRows ({ commit, state }) {
-
       commit('setLoading', true)
-      
-      fetch('/api/transactions').then(res=>res.json()).then((res)=>{
+
+      fetch('/api/transactions').then(res => res.json()).then((res) => {
         // console.log(JSON.stringify(res)) //{"err":null,"res":array}
         commit('setLoadedTransactions', res.res)
         commit('setLoading', false)
