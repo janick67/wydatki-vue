@@ -9,7 +9,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    rows: [],
+    transactions: [],
     loading: false,
     dbcol: {},
     conect: false,
@@ -17,9 +17,10 @@ export default new Vuex.Store({
     error: null
   },
   mutations: {
-    setLoadedRows (state, payload) {
+    setLoadedTransactions (state, payload) {
       console.log(payload.length)
-      state.rows = payload
+      console.log(payload)
+      state.transactions = payload
     },
     setUser (state, payload) {
       state.user = payload
@@ -37,28 +38,14 @@ export default new Vuex.Store({
   },
   actions: {
     loadRows ({ commit, state }) {
-      // firebase.database().ref('/data/janick67/rows').once('value').then((data) => {
-      //   data.val().forEach(el => {
-      //     db.collection('data').doc('cnV2G5NWARSPtQ0OBghdCRua90K3').collection('rows').add(el)
-      //   })
+
       commit('setLoading', true)
-      if (!state.conect) this.dispatch('setDbConnect')
-      state.dbcol.orderBy('data', 'desc').onSnapshot(snap => {
-        let items = []
-        snap.forEach((doc) => {
-          let obj = doc.data()
-          obj.id = doc.id
-          items.push(obj)
-        })
-        commit('setLoadedRows', items)
+      
+      fetch('/api/transactions').then(res=>res.json()).then((res)=>{
+        // console.log(JSON.stringify(res)) //{"err":null,"res":array}
+        commit('setLoadedTransactions', res.res)
         commit('setLoading', false)
       })
-    },
-    setDbConnect ({ state }) {
-      state.connect = true
-      let user = 'test'
-      if (state.user !== null && typeof state.user.id !== 'undefined') user = state.user.id
-      state.dbcol = db.collection('data').doc(user).collection('rows')
     },
     deleteItem ({ state }, { id }) {
       state.dbcol.doc(id).delete()
@@ -126,8 +113,8 @@ export default new Vuex.Store({
   },
 
   getters: {
-    rows (state) {
-      return state.rows.sort((a, b) => new Date(a.data) - new Date(b.data)).slice(1, 1)
+    transactions (state) {
+      return state.transactions
     },
     user (state) {
       return state.user

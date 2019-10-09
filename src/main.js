@@ -7,8 +7,13 @@ import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
 import config from './config'
+import DateFilter from './filters/date'
+import MoneyFilter from './filters/money'
 
-Vue.config.productionTip = false
+
+
+Vue.filter('date', DateFilter)
+Vue.filter('money', MoneyFilter)
 
 firebase.initializeApp(config.firebaseConfig)
 
