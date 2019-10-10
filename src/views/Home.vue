@@ -2,7 +2,7 @@
   <div>
     <v-container>
   <v-card>
-    <v-tabs v-model="tab" grow>
+    <v-tabs v-model="tab" grow show-arrows="false">
       <v-tab v-for="item in tabs" :key="item">
         {{ item }}
       </v-tab>
@@ -22,19 +22,13 @@
                     <v-card-text class="pa-0 grey darken-5">
                       <div class="px-2 white--text">{{dates.title | date}}</div>
                       <template v-for="record in dates.arr" >
-                        <v-list-item :key="record.id" :class="{'red lighten-5':record.type == 1,'green lighten-5':record.type == 2}">
-                          <template>
-                            <v-list-item-content>
-                              <v-list-item-title v-text="record.category"></v-list-item-title>
-                              <v-list-item-subtitle  v-text="record.subcategory"></v-list-item-subtitle>
-                            </v-list-item-content>
-                            <v-list-item-action>
-                              <v-list-item-action-text class="text--primary body-1"><span v-if="record.type == 1">-</span>{{record.amount | money}}</v-list-item-action-text>
-                            </v-list-item-action>
-                          </template>
-                        </v-list-item>
-                        </template>
-                      </v-card-text>
+                        <Expense v-if="record.type == 1" :key="record.id" :record="record"/>
+                        <Income v-else-if="record.type == 2" :key="record.id" :record="record"/>
+                        <DebIn v-else-if="record.type == 3" :key="record.id" :record="record"/>
+                        <DebOut v-else-if="record.type == 4" :key="record.id" :record="record"/>
+                        <Internal v-else :key="record.id" :record="record"/>
+                      </template>
+                    </v-card-text>
                   </v-card>
                 </template>
               </v-list-item-group>
@@ -49,13 +43,23 @@
 </template>
 
 <script>
+import Expense from '../components/transactions/Expense'
+import Income from '../components/transactions/Income'
+import DebIn from '../components/transactions/DebIn'
+import DebOut from '../components/transactions/DebOut'
+import Internal from '../components/transactions/Internal'
+
 export default {
   components: {
-
+    Expense,
+    Income,
+    DebIn,
+    DebOut,
+    Internal
   },
   data () {
     return {
-      tabs: ['Wszystkie', 'Wydatki', 'Przychody'],
+      tabs: ['Wszystkie', 'Wydatki', 'Przychody','Pożyczone','Długi','Przelewy'],
       tab: 0,
       selected: []
     }
@@ -67,11 +71,17 @@ export default {
 
       trans = trans.filter(function (el) {
         if (tab === 0) {
-          return el.type === 1 || el.type === 2
+          return true
         } else if (tab === 1) {
           return el.type === 1
-        } else {
+        } else if (tab === 2) {
           return el.type === 2
+        } else if (tab === 3) {
+          return el.type === 3
+        } else if (tab === 4) {
+          return el.type === 4
+        } else {
+          return el.type === 5
         }
       })
       let arrayByDate = []
