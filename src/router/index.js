@@ -12,6 +12,11 @@ import Deals from '@/views/Deals.vue'
 import Refund from '@/views/Refund.vue'
 import Settings from '@/views/Settings.vue'
 import Summary from '@/views/Summary.vue'
+import AddExpense from '@/views/Transactions/AddExpense.vue'
+import AddIncome from '@/views/Transactions/AddIncome.vue'
+import AddDebIn from '@/views/Transactions/AddDebIn.vue'
+import AddDebOut from '@/views/Transactions/AddDebOut.vue'
+import AddInternal from '@/views/Transactions/AddInternal.vue'
 import AuthGuard from './auth-guard'
 
 Vue.use(Router)
@@ -77,6 +82,36 @@ export default new Router({
       path: '/Settings',
       name: 'Settings',
       component: Settings,
+      beforeEnter: AuthGuard
+    },
+    {
+      path: '/AddExpense',
+      name: 'AddExpense',
+      component: AddExpense,
+      beforeEnter: AuthGuard
+    },
+    {
+      path: '/AddIncome',
+      name: 'AddIncome',
+      component: AddIncome,
+      beforeEnter: AuthGuard
+    },
+    {
+      path: '/AddDebIn',
+      name: 'AddDebIn',
+      component: AddDebIn,
+      beforeEnter: AuthGuard
+    },
+    {
+      path: '/AddDebOut',
+      name: 'AddDebOut',
+      component: AddDebOut,
+      beforeEnter: AuthGuard
+    },
+    {
+      path: '/AddInternal',
+      name: 'AddInternal',
+      component: AddInternal,
       beforeEnter: AuthGuard
     },
     {

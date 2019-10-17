@@ -6,18 +6,28 @@
     >
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
-      <v-toolbar-title>Wydatki</v-toolbar-title>
+      <v-toolbar-title><v-btn
+       to="/"
+       active-class="notBackground"
+       text
+      > Wydatki</v-btn></v-toolbar-title>
 
       <div class="flex-grow-1"></div>
 
        <v-btn
           v-if="userIsAuthenticated"
+          active-class="notBackground"
+          text
+          elevation="4"
           @click="onLogout">
           <v-icon left dark>mdi-exit-to-app</v-icon>
           Wyloguj
         </v-btn>
         <v-btn
         v-else
+        active-class="notBackground"
+        text
+        elevation="4"
         to="/signin">
           <v-icon left dark>mdi-lock-open-variant</v-icon>
           Zaloguj
@@ -139,3 +149,9 @@ export default {
   }
 }
 </script>
+
+<style  scoped>
+.notBackground::before{
+  display:none;
+}
+</style>

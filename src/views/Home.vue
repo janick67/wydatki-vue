@@ -2,7 +2,9 @@
   <div>
     <v-container>
   <v-card>
-    <v-tabs v-model="tab" grow show-arrows="false">
+    <v-tabs v-model="tab" grow
+    show-arrows
+    >
       <v-tab v-for="item in tabs" :key="item">
         {{ item }}
       </v-tab>
@@ -37,17 +39,19 @@
         </v-card>
       </v-tab-item>
     </v-tabs-items>
+     <ButtonFloat /> 
   </v-card>
   </v-container>
   </div>
 </template>
 
 <script>
-import Expense from '../components/transactions/Expense'
-import Income from '../components/transactions/Income'
-import DebIn from '../components/transactions/DebIn'
-import DebOut from '../components/transactions/DebOut'
-import Internal from '../components/transactions/Internal'
+import Expense from '../components/Transactions/Expense'
+import Income from '../components/Transactions/Income'
+import DebIn from '../components/Transactions/DebIn'
+import DebOut from '../components/Transactions/DebOut'
+import Internal from '../components/Transactions/Internal'
+import ButtonFloat from '../components/ButtonFloat'
 
 export default {
   components: {
@@ -55,13 +59,14 @@ export default {
     Income,
     DebIn,
     DebOut,
-    Internal
+    Internal,
+    ButtonFloat
   },
   data () {
     return {
-      tabs: ['Wszystkie', 'Wydatki', 'Przychody','Pożyczone','Długi','Przelewy'],
+      tabs: ['Wszystkie', 'Wydatki', 'Przychody','Pożyczki','Długi','Przelewy'],
       tab: 0,
-      selected: []
+      selected: [],
     }
   },
   computed: {
