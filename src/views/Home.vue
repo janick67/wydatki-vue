@@ -1,6 +1,4 @@
 <template>
-  <div>
-    <v-container>
   <v-card>
     <v-tabs v-model="tab" grow
     show-arrows
@@ -41,8 +39,6 @@
     </v-tabs-items>
      <ButtonFloat /> 
   </v-card>
-  </v-container>
-  </div>
 </template>
 
 <script>
