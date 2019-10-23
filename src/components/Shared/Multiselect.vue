@@ -5,15 +5,15 @@
         >
             {{title}}
         </label>
-        <multiselect 
-            v-model="value" 
-            tag-placeholder="Dodaj nowy element" 
-            placeholder="Wybierz..." 
-            label="name" 
-            track-by="code" 
-            :options="options" 
-            :multiple="multiselect" 
-            :taggable="true" 
+        <multiselect
+            v-model="value"
+            tag-placeholder="Dodaj nowy element"
+            placeholder="Wybierz..."
+            label="name"
+            track-by="code"
+            :options="options"
+            :multiple="multiselect"
+            :taggable="true"
             @input="input"
             @tag="addTag">
         </multiselect>
@@ -29,13 +29,13 @@ export default {
   },
   data () {
     return {
-      value: [],
+      value: []
     }
   },
-  props:[
-      'options',
-      'title',
-      'multiselect'
+  props: [
+    'options',
+    'title',
+    'multiselect'
   ],
   methods: {
     addTag (newTag) {
@@ -44,19 +44,23 @@ export default {
         code: newTag
       }
       this.options.push(tag)
-      this.value.push(tag)
+      if (this.multiselect) {
+        this.value.push(tag)
+      } else {
+        this.value = tag
+      }
     },
-    input(){
-        const arr = []
-        if (this.multiselect){
-            this.value.forEach(el =>{
-                arr.push(el.code)
-            })
-        }else{
-            arr.push(this.value.code)
-        }
-        
-        this.$emit('input',arr)
+    input () {
+      const arr = []
+      if (this.multiselect) {
+        this.value.forEach(el => {
+          arr.push(el.code)
+        })
+      } else {
+        arr.push(this.value.code)
+      }
+
+      this.$emit('input', arr)
     }
   }
 }

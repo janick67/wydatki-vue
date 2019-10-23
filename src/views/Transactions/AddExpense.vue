@@ -8,124 +8,129 @@
                     ref="form"
                     lazy-validation
                 >
+                <template  v-for="(item, i) in inputs">
                     <v-text-field
+                    v-if="item.type=='text-field'"
+                    v-model="item.model"
+                    :type="item.itemType"
+                    :label="item.label"
+                    :required="item.required"
+                    :key="i"
+                    ></v-text-field>
+
+                    <DatePicker
+                    v-else-if="item.type=='DatePicker'"
+                    v-model="item.model"
+                    :key="i"
+                     />
+
+                    <multiselect
+                        v-else-if="item.type=='multiselect'&&(more||typeof item.more=='undefined')"
+                        :options="item.options"
+                        v-model="item.model"
+                        :title="item.label"
+                        :v-on:input="item.model"
+                        :multiselect="item.multiselect"
+                        :key="i"
+                    />
+
+                    <v-btn v-else-if="!more&&item.type=='more'" v-on:click="more=true" text :key="i">Więcej...</v-btn>
+                </template>
+                    <!-- <v-text-field
                     v-model="form.amount"
                     type="number"
                     label="Kwota"
                     required
                     ></v-text-field>
 
-                    <v-menu
-                        :close-on-content-click="false"
-                        transition="scale-transition"
-                        offset-y
-                        max-width="290px"
-                        min-width="290px"
-                        >
-                        <template v-slot:activator="{ on }">
-                            <v-text-field
-                            v-model="form.dateFormatted"
-                            readonly
-                            label="Data"
-                            required
-                            @blur="date = parseDate(form.dateFormatted)"
-                            v-on="on"
-                            ></v-text-field>
-                        </template>
-                        <v-date-picker v-model="date" no-title @input="menu1 = false"></v-date-picker>
-                        </v-menu>
+                    <DatePicker v-model="form.date" />
 
-                        <multiselect 
-                            :options="options"
+                        <multiselect
+                            :options="options.type"
                             title="Typ"
                             v-on:input="form.type=$event"
                         />
                     <v-btn v-if="!more" v-on:click="more=true" text>Więcej...</v-btn>
                     <div v-else>
-                        <multiselect 
-                            :options="options"
+                        <multiselect
+                            :options="options.type2"
                             title="Typ2"
-                            v-on:input="form.type2=$event"
+                            v-model="form.type2"
                         />
-                        <multiselect 
-                            :options="options"
+                        <multiselect
+                            :options="options.where"
                             title="Gdzie"
                             v-on:input="form.where=$event"
                         />
-                        <multiselect 
-                            :options="options"
+                        <multiselect
+                            :options="options.persons"
                             title="Osoby"
                             :multiselect="true"
                             v-on:input="form.persons=$event"
                         />
-                        <multiselect 
-                            :options="options"
+                        <multiselect
+                            :options="options.tags"
                             title="Tagi"
                             :multiselect="true"
                             v-on:input="form.tags=$event"
                         />
-                    </div>
+                    </div> -->
                 </v-form>
             </v-card-text>
             <v-card-actions>
                 <v-btn class="primary">Anuluj</v-btn>
-                <v-btn class="primary">Zapisz</v-btn>
+                <v-btn class="primary" @click="save">Zapisz</v-btn>
             </v-card-actions>
         </v-card>
 </template>
 
-
 <script>
-    import Multiselect from '../../components/Shared/Multiselect'
+import Multiselect from '../../components/Shared/Multiselect'
+import DatePicker from '../../components/Shared/DatePicker'
 
-  export default {
-    components: {
-        Multiselect
+export default {
+  components: {
+    Multiselect,
+    DatePicker
+  },
+  data: () => ({
+    form: {
+      amount: '',
+      date: null,
+      type: null,
+      type2: null,
+      where: null,
+      persons: null,
+      tags: []
     },
-    data: vm => ({
-      date: new Date().toISOString().substr(0, 10),
-      form:{
-        amount: '',
-        dateFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
-        type: null,
-        type2: null,
-        where: null,
-        persons: null,
-        tags:[]
-      },
-    options: [
-        { name: 'Vue.js', code: 'vu' },
-        { name: 'Javascript', code: 'js' },
-        { name: 'Open Source', code: 'os' }
-      ],
-      more:false,
-    }),
-
-    computed: {
-      computedDateFormatted () {
-        return this.formatDate(this.date)
-      },
+    inputs: [
+      { name: 'amount', type: 'text-field', model: null, inputType: 'number', label: 'Kwota', required: true },
+      { name: 'date', type: 'DatePicker', model: null },
+      { name: 'type', type: 'multiselect', options: [], label: 'Typ', model: [] },
+      { name: 'more', type: 'more' },
+      { name: 'type2', type: 'multiselect', options: [], label: 'Typ2', more: true, model: [] },
+      { name: 'where', type: 'multiselect', options: [], label: 'Gdzie', more: true, model: [] },
+      { name: 'persons', type: 'multiselect', options: [], label: 'Osoby', more: true, model: [], multiselect: true },
+      { name: 'tags', type: 'multiselect', options: [], label: 'Tagi', more: true, model: [], multiselect: true }
+    ],
+    more: false
+  }),
+  created () {
+    this.inputs.filter(el => typeof el.options !== 'undefined')
+      .forEach(el => {
+        el.options = this.options[el.name]
+      })
+  },
+  methods: {
+    arrayToObject (array, keyField) {
+      return array.reduce((obj, el) => {
+        obj[el[keyField]] = el.model
+        return obj
+      }, {})
     },
-
-    watch: {
-      date (val) {
-        this.form.dateFormatted = this.formatDate(this.date)
-      },
-    },
-
-    methods: {
-        formatDate (date) {
-            if (!date) return null
-
-            const [year, month, day] = date.split('-')
-            return `${day}.${month}.${year}`
-        },
-        parseDate (date) {
-            if (!date) return null
-
-            const [day, month, year] = date.split('.')
-            return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
-        }
-    },
+    save () {
+      console.log(this.arrayToObject(this.inputs, 'name'))
+    }
   }
+}
 </script>
