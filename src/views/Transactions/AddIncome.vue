@@ -1,6 +1,6 @@
 <template>
     <div>
-        <multiselect 
+        <multiselect
             :options="options"
             title="Wydatki"
             :multiselect="true"
@@ -26,9 +26,9 @@ export default {
     }
   },
   methods: {
-      change(params) {
-          console.log(params,params)
-      }
+    change (params) {
+      console.log(params, params)
+    }
   }
 }
 </script>

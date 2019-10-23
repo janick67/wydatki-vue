@@ -36,13 +36,13 @@ export default {
   data () {
     return {
       fab: false,
-      options:[
-        {display:'Wydatek',color:'red',link:'/AddExpense'},
-        {display:'Przychód',color:'green',link:'/AddIncome'},
-        {display:'Pożyczka',color:'blue',link:'/AddDebIn'},
-        {display:'Dług',color:'blue',link:'/AddDebOut'},
-        {display:'Przelew',color:'blue',link:'/AddInternal'},
-        ]
+      options: [
+        { display: 'Wydatek', color: 'red', link: '/AddExpense' },
+        { display: 'Przychód', color: 'green', link: '/AddIncome' },
+        { display: 'Pożyczka', color: 'blue', link: '/AddDebIn' },
+        { display: 'Dług', color: 'blue', link: '/AddDebOut' },
+        { display: 'Przelew', color: 'blue', link: '/AddInternal' }
+      ]
     }
   }
 }

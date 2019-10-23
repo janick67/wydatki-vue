@@ -37,7 +37,7 @@
         </v-card>
       </v-tab-item>
     </v-tabs-items>
-     <ButtonFloat /> 
+     <ButtonFloat />
   </v-card>
 </template>
 
@@ -60,9 +60,9 @@ export default {
   },
   data () {
     return {
-      tabs: ['Wszystkie', 'Wydatki', 'Przychody','Pożyczki','Długi','Przelewy'],
+      tabs: ['Wszystkie', 'Wydatki', 'Przychody', 'Pożyczki', 'Długi', 'Przelewy'],
       tab: 0,
-      selected: [],
+      selected: []
     }
   },
   computed: {
