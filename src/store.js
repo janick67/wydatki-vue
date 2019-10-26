@@ -7,7 +7,12 @@ export default new Vuex.Store({
   state: {
     transactions: [],
     loading: false,
-    allOptions: null
+    allOptions: null,
+    accounts: [],
+    categories: [],
+    subcategories: {},
+    persons: [],
+    tags: []
     // user: null,
     // error: null
   },
@@ -17,6 +22,21 @@ export default new Vuex.Store({
     },
     setLoadedAllOptions (state, payload) {
       state.allOptions = payload
+    },
+    setLoadedAccounts (state, payload) {
+      state.accounts = payload
+    },
+    setLoadedCategories (state, payload) {
+      state.categories = payload
+    },
+    setLoadedSubcategories (state, payload) {
+      state.subcategories = payload
+    },
+    setLoadedPersons (state, payload) {
+      state.persons = payload
+    },
+    setLoadedTags (state, payload) {
+      state.tags = payload
     },
     // setUser (state, payload) {
     //   state.user = payload
@@ -45,7 +65,46 @@ export default new Vuex.Store({
       fetch('/api/allOptions').then(res => res.json()).then((res) => {
         commit('setLoadedAllOptions', res.res)
         commit('setLoading', false)
-        console.log(res.res)
+      })
+    },
+    loadAccounts ({ commit }) {
+      commit('setLoading', true)
+      fetch('/api/accounts').then(res => res.json()).then((res) => {
+        commit('setLoadedAccounts', res.res)
+        commit('setLoading', false)
+        console.log('Accounts', res.res)
+      })
+    },
+    loadCategories ({ commit }) {
+      commit('setLoading', true)
+      fetch('/api/categories').then(res => res.json()).then((res) => {
+        commit('setLoadedCategories', res.res)
+        commit('setLoading', false)
+        console.log('Categories', res.res)
+      })
+    },
+    loadSubcategories ({ commit }) {
+      commit('setLoading', true)
+      fetch('/api/subcategories').then(res => res.json()).then((res) => {
+        commit('setLoadedSubcategories', res.res)
+        commit('setLoading', false)
+        console.log('Subcategories', res.res)
+      })
+    },
+    loadPersons ({ commit }) {
+      commit('setLoading', true)
+      fetch('/api/persons').then(res => res.json()).then((res) => {
+        commit('setLoadedPersons', res.res)
+        commit('setLoading', false)
+        console.log('Persons', res.res)
+      })
+    },
+    loadTags ({ commit }) {
+      commit('setLoading', true)
+      fetch('/api/Tags').then(res => res.json()).then((res) => {
+        commit('setLoadedTags', res.res)
+        commit('setLoading', false)
+        console.log('Tags', res.res)
       })
     }
     // signUserUp ({ commit }, payload) {
@@ -113,6 +172,21 @@ export default new Vuex.Store({
     // },
     allOptions (state) {
       return state.allOptions
+    },
+    accounts (state) {
+      return state.accounts
+    },
+    categories (state) {
+      return state.categories
+    },
+    subcategories (state) {
+      return state.subcategories
+    },
+    persons (state) {
+      return state.persons
+    },
+    tags (state) {
+      return state.tags
     },
     loading (state) {
       return state.loading

@@ -74,34 +74,34 @@ export default {
       { name: 'subcategory', type: 'multiselect', options: [], label: 'Typ2', more: true, model: [] },
       { name: 'persons', type: 'multiselect', options: [], label: 'Osoby', more: true, model: [], multiselect: true },
       { name: 'tags', type: 'multiselect', options: [], label: 'Tagi', more: true, model: [], multiselect: true },
-      { name: 'comment', type: 'textarea', model:null, label:'Komentarz', more:true}
+      { name: 'comment', type: 'textarea', model: null, label: 'Komentarz', more: true }
     ],
     more: false
   }),
   created () {
-      this.$store.dispatch('loadAllOptions')
+    this.$store.dispatch('loadAllOptions')
   },
-  computed:{
-      allOptions(){
-          const allOptions = this.$store.getters.allOptions
-          return allOptions
-      }
+  computed: {
+    allOptions () {
+      const allOptions = this.$store.getters.allOptions
+      return allOptions
+    }
   },
-  watch:{
-      allOptions(){
-        const allOptions = this.$store.getters.allOptions
-        const newObj = {account:[],category:[],subcategory:[],persons:[],tags:[]};
-        newObj['account'] = allOptions.account.map(el => {return {name: el.name, code: el.name}} )
-        newObj['category'] = allOptions.category.filter(el=>el.isSub==0).map(el => {return {name: el.name, code: el.name}} )
-        newObj['subcategory'] = allOptions.category.filter(el=>el.isSub==1).map(el => {return {name: el.name, code: el.name}} )
-        newObj['persons'] = allOptions.persons.map(el => {return {name: el.short, code: el.short}} )
-        newObj['tags'] = allOptions.tags.map(el => {return {name: el.tag, code: el.tag}} )
-        
-        this.inputs.filter(el => typeof el.options !== 'undefined')
+  watch: {
+    allOptions () {
+      const allOptions = this.$store.getters.allOptions
+      const newObj = { account: [], category: [], subcategory: [], persons: [], tags: [] }
+      newObj['account'] = allOptions.account.map(el => { return { name: el.name, code: el.name } })
+      newObj['category'] = allOptions.category.filter(el => el.isSub === 0).map(el => { return { name: el.name, code: el.name } })
+      newObj['subcategory'] = allOptions.category.filter(el => el.isSub === 1).map(el => { return { name: el.name, code: el.name } })
+      newObj['persons'] = allOptions.persons.map(el => { return { name: el.short, code: el.short } })
+      newObj['tags'] = allOptions.tags.map(el => { return { name: el.tag, code: el.tag } })
+
+      this.inputs.filter(el => typeof el.options !== 'undefined')
         .forEach(el => {
-            el.options = newObj[el.name]
+          el.options = newObj[el.name]
         })
-      }
+    }
   },
   methods: {
     arrayToObject (array, keyField) {
